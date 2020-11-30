@@ -244,7 +244,7 @@ struct AbletonLink::ImplBase  : public Timer
             activateTimer (isEnabled);
 
             if (isEnabled)
-                setTempoFromLink (link.captureAppTimeline().tempo());
+                setTempoFromLink (link.captureAudioSessionState().tempo());
         }
 
         void isConnectedCallback (std::size_t numPeers)
@@ -253,29 +253,29 @@ struct AbletonLink::ImplBase  : public Timer
             callConnectionChanged();
 
             if (isConnected)
-                setTempoFromLink (link.captureAppTimeline().tempo());
+                setTempoFromLink (link.captureAudioSessionState().tempo());
         }
 
         void setTempoToLink (double bpm) override
         {
-            auto timeline = link.captureAppTimeline();
+            auto timeline = link.captureAudioSessionState();
             timeline.setTempo (bpm, clock.micros());
-            link.commitAppTimeline (timeline);
+            link.commitAudioSessionState (timeline);
         }
 
         double getTempoFromLink() override
         {
-            return link.captureAppTimeline().tempo();
+            return link.captureAudioSessionState().tempo();
         }
 
         double getBeatNow (double quantum) override
         {
-            return link.captureAppTimeline().beatAtTime (clock.micros(), quantum);
+            return link.captureAudioSessionState().beatAtTime (clock.micros(), quantum);
         }
 
         double getBarPhase (double quantum) override
         {
-            return link.captureAppTimeline().phaseAtTime (clock.micros(), quantum);
+            return link.captureAudioSessionState().phaseAtTime (clock.micros(), quantum);
         }
 
         ableton::Link::Clock clock;
